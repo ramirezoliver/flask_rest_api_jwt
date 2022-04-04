@@ -9,7 +9,7 @@ from functools import wraps
 app = Flask(__name__)
 
 app.config['SECRET_KEY']='Th1s1ss3cr3t'
-app.config['SQLALCHEMY_DATABASE_URI']='sqlite:///library.db'
+app.config['SQLALCHEMY_DATABASE_URI']='sqlite:///db.sqlite3'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
 db = SQLAlchemy(app)
@@ -22,11 +22,12 @@ class Users(db.Model):
     admin = db.Column(db.Boolean)
 
 class Authors(db.Model):
-    user_id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), unique=True, nullable=False)
     book = db.Column(db.String(20), unique=True, nullable=False)
     country = db.Column(db.String(50), nullable=False)
     booker_prize = db.Column(db.Boolean)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
 def token_required(f):
     @wraps(f)
@@ -128,7 +129,7 @@ def get_authors(current_user):
 @app.route('/authors/<author_id>', methods=['DELETE'])
 @token_required
 def delete_author(current_user, author_id):  
-    author = Authors.query.filter_by(user_id=current_user.id).first()   
+    author = Authors.query.filter_by(id=author_id, user_id=current_user.id).first()   
     if not author:   
        return jsonify({'message': 'author does not exist'})   
 
