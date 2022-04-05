@@ -29,7 +29,7 @@ def token_required(f):
     return decorator
 
 @app.route('/register', methods=['GET', 'POST'])
-def signup_user():  
+def signup_user():
     data = request.get_json()  
 
     hashed_password = generate_password_hash(data['password'], method='sha256')

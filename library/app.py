@@ -15,7 +15,9 @@ def create_app():
 
     with app.app_context():
         from . import models
-        from . import routes  # Import routes
+        from .views import (users_bp) # Import routes
         db.create_all()  # Create sql tables for our data models
 
+        app.register_blueprint(users_bp)
+        
         return app
