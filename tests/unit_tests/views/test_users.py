@@ -29,8 +29,6 @@ def empty_db(app):
         db.drop_all()
 
 USER_1 = dict(
-    id = 1,
-    public_id = 1,
     name = 'fake_name',
     password = 'fake_pass',
     admin = False,

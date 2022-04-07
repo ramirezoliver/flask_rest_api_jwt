@@ -5,8 +5,13 @@ import os
 db = SQLAlchemy()
 
 def get_database_url():
-    DATA_BASE_URL = os.environ['DB_URL']
-    return DATA_BASE_URL
+    DB_NAME = os.environ.get('DB_NAME')
+    DB_HOST = os.environ.get('DB_HOST')
+    DB_PASSWORD = os.environ.get('DB_PASSWORD')
+    DB_USER = os.environ.get('DB_USER')
+
+    DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}/{DB_NAME}"
+    return DATABASE_URL
 
 def create_app():
     """Construct the core application."""
