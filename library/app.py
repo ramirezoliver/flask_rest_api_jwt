@@ -27,7 +27,7 @@ def create_app():
         from . import models
         from .views import (users_bp, authors_bp) # Import routes
         db.create_all()  # Create sql tables for our data models
-
+        
         app.register_blueprint(users_bp)
         app.register_blueprint(authors_bp)
         
