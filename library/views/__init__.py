@@ -1,8 +1,8 @@
 from flask import Blueprint
 from flask_restful import Api
 
-from library.views.users import SignUpUser, LoginUser, GetAllUsers
-from library.views.authors import CreateAuthor, GetAuthors, DeleteAuthor
+from library.views.authors import CreateAuthor, DeleteAuthor, GetAuthors
+from library.views.users import GetAllUsers, LoginUser, SignUpUser
 
 authors_bp = Blueprint('authors_bp', __name__)
 users_bp = Blueprint('users_bp', __name__)

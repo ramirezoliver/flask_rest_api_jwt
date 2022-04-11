@@ -1,5 +1,6 @@
 from library.app import db
 
+
 class Authors(db.Model):
     __tablename__ = 'authors'
 

@@ -1,5 +1,7 @@
-from library.app import db
 from sqlalchemy.dialects.postgresql import UUID
+
+from library.app import db
+
 
 class Users(db.Model):
     __tablename__ = 'users'

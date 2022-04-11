@@ -1,10 +1,12 @@
-from flask_restful import Resource
-from flask import request, jsonify
-import jwt
 from functools import wraps
-from library.models import Authors, Users
-from library.app import db
+
+import jwt
 from flask import current_app as app
+from flask import jsonify, request
+from flask_restful import Resource
+
+from library.app import db
+from library.models import Authors, Users
 
 
 def token_required(f):
@@ -31,14 +33,15 @@ def token_required(f):
 class CreateAuthor(Resource):
     @token_required
     def post(current_user, self):
-   
-        data = request.get_json() 
 
-        new_authors = Authors(name=data['name'], country=data['country'], book=data['book'], booker_prize=True, user_id=current_user.id)  
-        db.session.add(new_authors)   
-        db.session.commit()   
+        data = request.get_json()
 
-        return jsonify({'message' : 'new author created'})
+        new_authors = Authors(name=data['name'], country=data['country'], book=data['book'], booker_prize=True, user_id=current_user.id)
+        db.session.add(new_authors)
+        db.session.commit()
+
+        return jsonify({'message': 'new author created'})
+
 
 class GetAuthors(Resource):
     @token_required
@@ -56,17 +59,17 @@ class GetAuthors(Resource):
             author_data['booker_prize'] = author.booker_prize
             output.append(author_data)
 
-        return jsonify({'list_of_authors' : output})
+        return jsonify({'list_of_authors': output})
+
 
 class DeleteAuthor(Resource):
     @token_required
-    def delete(current_user, self, author_id):  
-        author = Authors.query.filter_by(id=author_id, user_id=current_user.id).first()   
-        if not author:   
-            return jsonify({'message': 'author does not exist'})   
+    def delete(current_user, self, author_id):
+        author = Authors.query.filter_by(id=author_id, user_id=current_user.id).first()
+        if not author:
+            return jsonify({'message': 'author does not exist'})
 
-
-        db.session.delete(author)  
-        db.session.commit()   
+        db.session.delete(author)
+        db.session.commit()
 
         return jsonify({'message': 'Author deleted'})
