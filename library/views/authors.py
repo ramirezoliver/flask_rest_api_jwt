@@ -18,13 +18,13 @@ def token_required(f):
             token = request.headers['x-access-tokens']
 
         if not token:
-            return jsonify({'message': 'a valid token is missing'})
+            return {'message': 'a valid token is missing'}, 401
 
         try:
             data = jwt.decode(token, app.config['SECRET_KEY'], algorithms=["HS256"])
             current_user = Users.query.filter_by(public_id=data['public_id']).first()
         except:
-            return jsonify({'message': 'token is invalid'})
+            return {'message': 'token is invalid'}, 401
 
         return f(current_user, *args, **kwargs)
     return decorator
@@ -40,7 +40,7 @@ class CreateAuthor(Resource):
         db.session.add(new_authors)
         db.session.commit()
 
-        return jsonify({'message': 'new author created'})
+        return {'message': 'new author created'}, 201
 
 
 class GetAuthors(Resource):
@@ -67,9 +67,9 @@ class DeleteAuthor(Resource):
     def delete(current_user, self, author_id):
         author = Authors.query.filter_by(id=author_id, user_id=current_user.id).first()
         if not author:
-            return jsonify({'message': 'author does not exist'})
+            return {'message': 'author does not exist'}, 404
 
         db.session.delete(author)
         db.session.commit()
 
-        return jsonify({'message': 'Author deleted'})
+        return {'message': 'Author deleted'}, 202

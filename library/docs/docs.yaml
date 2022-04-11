@@ -1,0 +1,214 @@
+openapi: 3.0.0
+servers: []
+info:
+  description: This is a simple API
+  version: "1.0.0"
+  title: Simple Inventory API
+  contact:
+    email: you@your-company.com
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+tags:
+  - name: users
+    description: Operations available to API users
+  - name: authors
+    description: APIs for CRUD author entry
+
+paths:
+  /register:
+    post:
+      tags:
+        - users
+      summary: signs up new users 
+      operationId: SignUpUser
+      description: Register new user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewUser'
+      responses:
+        '201':
+          description: User created successfuly
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: registered successfully
+        '400':
+          description: 'invalid input, object invalid'
+        
+  /login:
+    get:
+      tags:
+        - users
+      summary: logs in existing users
+      security:
+        - basicAuth: []
+      operationId: LoginUser
+      description: Login Existing User
+      responses:
+        '200':
+          description: Successful Login
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    example: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ"
+        '401':
+            $ref: '#/components/responses/UnauthorizedError'
+    
+  /author:
+    post:
+      tags: 
+        - authors
+      summary: add new author
+      security:
+        - bearerAuth: []
+      operationId: CreateAuthor
+      description: Add new author
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Author'
+      responses:
+        '201':
+          description: Successful addition
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: new author created
+        '401':
+          $ref: '#/components/responses/InvalidToken'
+  
+  /author/{author_id}:
+    delete:
+      tags:
+        - authors
+      summary: delete existing author
+      security:
+        - bearerAuth: []
+      operationId: DeleteAuthor
+      description: delete existing author
+      parameters:
+        - $ref: '#/components/parameters/author_id'
+      responses:
+        '202':
+          description: Successful deletion
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Author deleted
+        '404':
+          description: Unsuccessful deletion
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Author does not exist
+                    
+  /authors:
+    get:
+      tags:
+        - authors
+      summary: get list of authors
+      security:
+        - bearerAuth: []
+      operationId: GetAuthorsList
+      description: Get list of existing authors
+      responses:
+        '200':
+          description: Successful return of list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  list_of_authors:
+                    type: array
+                    items: 
+                      $ref: '#/components/schemas/Author'
+  
+components:
+  parameters:
+    author_id:
+      name: author_id
+      in: path
+      schema:
+        type: integer
+      required: true
+      description: This is the unique identifier that was assigned to Author Record
+      example: 1
+
+  schemas:
+    NewUser:
+      type: object
+      required:
+        - name
+        - password
+      properties:
+        name:
+          type: string
+          example: Sam Jones
+        password:
+          type: string
+          example: s@mpl3p@55w0rd
+    Author:
+      type: object
+      required:
+        - name
+        - book
+        - country
+      properties:
+        name:
+          type: string
+          example: Herman Melville
+        book:
+          type: string
+          example: Moby Dick
+        country:
+          type: string
+          example: U.S.A.
+
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      
+  responses:
+    UnauthorizedError:
+      description: Authentication information is missing or invalid
+      headers:
+        WWW_Authenticate:
+          schema:
+            type: string
+    InvalidToken:
+      description: Access token is missing or invalid
+      
+security:
+  - basicAuth: [] 
+  - bearerAuth: []

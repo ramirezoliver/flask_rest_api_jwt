@@ -21,7 +21,7 @@ class SignUpUser(Resource):
         db.session.add(new_user)
         db.session.commit()
 
-        return jsonify({'message': 'registered successfully'})
+        return {'message': 'registered successfully'}, 201
 
 
 class LoginUser(Resource):

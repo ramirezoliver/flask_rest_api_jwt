@@ -16,4 +16,4 @@ users_api.add_resource(GetAllUsers, '/users')
 
 authors_api.add_resource(CreateAuthor, '/author')
 authors_api.add_resource(GetAuthors, '/authors')
-authors_api.add_resource(DeleteAuthor, '/authors/<author_id>')
+authors_api.add_resource(DeleteAuthor, '/author/<author_id>')

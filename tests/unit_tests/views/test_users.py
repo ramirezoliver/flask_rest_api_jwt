@@ -56,7 +56,7 @@ def tests_register_user(client, database):
                             "password": "test_pw",
                             }
                         )
-    assert response.status_code == 200
+    assert response.status_code == 201
 
 
 def tests_login_valid(client, database):
@@ -73,6 +73,6 @@ def tests_login_valid(client, database):
     assert response.status_code == 200
 
 
-def tests_get_authors(client, database):
+def tests_get_users(client, database):
     response = client.post('/users')
     assert response.status_code == 200
