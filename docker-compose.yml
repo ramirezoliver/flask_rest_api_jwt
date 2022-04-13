@@ -15,6 +15,18 @@ services:
     depends_on:
       - db
 
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin4_container
+    restart: always
+    ports:
+      - "5050:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: sample@email.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+
   db:
     image: postgres:12-alpine
     volumes:
@@ -25,3 +37,4 @@ services:
 volumes:
     postgres_data:
     flask-app:
+    pgadmin-data:
