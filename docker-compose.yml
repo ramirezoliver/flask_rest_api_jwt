@@ -3,7 +3,7 @@ version: '3.3'
 services:
   flask-app:
     build: .
-    command: tox
+    command: flask run --host=0.0.0.0
     volumes:
       - .:/usr/src/app/
     ports:
@@ -21,9 +21,8 @@ services:
     restart: always
     ports:
       - "5050:80"
-    environment:
-      PGADMIN_DEFAULT_EMAIL: sample@email.com
-      PGADMIN_DEFAULT_PASSWORD: admin
+    env_file:
+      - ./.env.test
     volumes:
       - pgadmin-data:/var/lib/pgadmin
 
