@@ -80,7 +80,7 @@ paths:
             schema:
               $ref: '#/components/schemas/Author'
       responses:
-        '201':
+        '200':
           description: Successful addition
           content:
             application/json:
@@ -94,6 +94,58 @@ paths:
           $ref: '#/components/responses/InvalidToken'
   
   /author/{author_id}:
+    get:
+      tags:
+        - authors
+      summary: get specific author
+      security:
+        - bearerAuth: []
+      operationId: GetAuthor
+      description: get specific author
+      parameters:
+        - $ref: '#/components/parameters/author_id'
+      responses:
+        '200':
+          description: Successful get
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Author'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    patch:
+      tags:
+        - authors
+      summary: edit existing author
+      security:
+        - bearerAuth: []
+      operationId: PatchAuthor
+      description: edit existing author
+      parameters:
+        - $ref: '#/components/parameters/author_id'
+      responses:
+        '200':
+          description: Successful patch
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Update successful
+        '403':
+          description: Unsuccessful patch
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Forbidden
+        '404':
+          $ref: '#/components/responses/NotFound'
     delete:
       tags:
         - authors
@@ -116,15 +168,8 @@ paths:
                     type: string
                     example: Author deleted
         '404':
-          description: Unsuccessful deletion
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: Author does not exist
+          $ref: '#/components/responses/NotFound'
+    
                     
   /authors:
     get:
@@ -188,6 +233,9 @@ components:
         country:
           type: string
           example: U.S.A.
+        id:
+          type: integer
+          example: 1
 
   securitySchemes:
     basicAuth:
@@ -208,6 +256,16 @@ components:
             type: string
     InvalidToken:
       description: Access token is missing or invalid
+    NotFound:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: NOT_FOUND
       
 security:
   - basicAuth: [] 
