@@ -9,4 +9,4 @@ class Authors(db.Model):
     book = db.Column(db.String(20), unique=True, nullable=False)
     country = db.Column(db.String(50), nullable=False)
     booker_prize = db.Column(db.Boolean)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))

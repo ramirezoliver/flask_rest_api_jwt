@@ -3,7 +3,7 @@ version: '3.3'
 services:
   flask-app:
     build: .
-    command: tox
+    command: flask run --host=0.0.0.0
     volumes:
       - .:/usr/src/app/
     ports:
@@ -15,6 +15,17 @@ services:
     depends_on:
       - db
 
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin4_container
+    restart: always
+    ports:
+      - "5050:80"
+    env_file:
+      - ./.env.test
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+
   db:
     image: postgres:12-alpine
     volumes:
@@ -25,3 +36,4 @@ services:
 volumes:
     postgres_data:
     flask-app:
+    pgadmin-data:

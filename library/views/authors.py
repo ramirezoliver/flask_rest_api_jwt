@@ -1,33 +1,9 @@
-from functools import wraps
-
-import jwt
-from flask import current_app as app
 from flask import jsonify, request
 from flask_restful import Resource
 
 from library.app import db
-from library.models import Authors, Users
-
-
-def token_required(f):
-    @wraps(f)
-    def decorator(*args, **kwargs):
-        token = None
-
-        if 'x-access-tokens' in request.headers:
-            token = request.headers['x-access-tokens']
-
-        if not token:
-            return {'message': 'a valid token is missing'}, 401
-
-        try:
-            data = jwt.decode(token, app.config['SECRET_KEY'], algorithms=["HS256"])
-            current_user = Users.query.filter_by(public_id=data['public_id']).first()
-        except:
-            return {'message': 'token is invalid'}, 401
-
-        return f(current_user, *args, **kwargs)
-    return decorator
+from library.models import Authors
+from library.utils.auth_token import token_required
 
 
 class CreateAuthor(Resource):
