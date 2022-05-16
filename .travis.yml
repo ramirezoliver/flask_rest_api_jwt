@@ -1,10 +1,32 @@
+
+sudo: yes
+dist: bionic
 language: python
 
 python:
 - '3.7'
 
+
+branches:
+  only:
+  - main
+
+
+services:
+  - postgresql
+
 install:
 - pip install tox-travis
 
+before_script:
+- createdb library-crud-test
+
 script:
-  - echo "Hello"
+  - tox
+
+env:
+  global:
+   - PGUSER=postgres
+   - PGPORT=5432
+   - PGHOST=localhost
+
