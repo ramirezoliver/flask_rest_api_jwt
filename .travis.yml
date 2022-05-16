@@ -1,9 +1,11 @@
+
 sudo: yes
 dist: bionic
 language: python
 
 python:
 - '3.7'
+
 
 services:
   - postgresql
@@ -22,3 +24,4 @@ env:
    - PGUSER=postgres
    - PGPORT=5432
    - PGHOST=localhost
+
